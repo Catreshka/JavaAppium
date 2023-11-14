@@ -1,23 +1,32 @@
 package tests;
 
+import io.qameta.allure.*;
+import io.qameta.allure.junit4.DisplayName;
 import lib.CoreTestCase;
 import lib.Platform;
 import lib.UI.*;
 import lib.UI.factory.ArticlePageObjectFactory;
 import lib.UI.factory.BottomToolbarArticleUIFactory;
 import lib.UI.factory.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
+@Epic("Tests for articles")
 public class ArticleTests extends CoreTestCase {
 
     @Test
+    @Features(value = {@Feature(value="Search"),@Feature(value="Article")})
+    @DisplayName("Working with list of favorites")
+    @Description("Test is adding 2 articles in favorite list, then deleting 1 selected article and checking that the correct article was deleted ")
+    @Step("Starting test testSwipeArticle")
+    @Severity(value=SeverityLevel.CRITICAL)
     public void testSwipeArticle()
     {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);
         SearchPageObject.initSearchInput();
 
         String searchWord = "Appium";
-        String nameArticleOne = "AppImage";
+        String nameArticleOne = "Appium";
         String nameArticleTwo = "Appius Claudius Caecus";
         String subArticleTwo ="Roman statesman";
 
@@ -64,7 +73,7 @@ public class ArticleTests extends CoreTestCase {
             String article_title_in_folder = ArticlePageObject.getArticleTitleInFolder(nameArticleTwo);
             SearchPageObject.clickByArticleWithSubstring(nameArticleTwo);
             String article_title_in_article = ArticlePageObject.getTitleInArticle();
-            assertEquals(
+            Assert.assertEquals(
                     "We see unexpected title",
                     article_title_in_article,
                     article_title_in_folder
@@ -74,7 +83,7 @@ public class ArticleTests extends CoreTestCase {
             SearchPageObject.clickByArticleWithSubstring(nameArticleTwo);
             String article_subtitle_in_article = ArticlePageObject.getArticleSubTitle(subArticleTwo);
 
-            assertEquals(
+            Assert.assertEquals(
                     "We see unexpected subtitle",
                     article_subtitle_in_folder,
                     article_subtitle_in_article
@@ -83,7 +92,7 @@ public class ArticleTests extends CoreTestCase {
             String article_title_in_folder = ArticlePageObject.getArticleTitleInFolderMW();
             SearchPageObject.clickBySavedArticleWithSubstring(nameArticleTwo);
             String article_title_in_article = ArticlePageObject.getTitleInArticleMW();
-            assertEquals(
+            Assert.assertEquals(
                     "We see unexpected title",
                     article_title_in_article,
                     article_title_in_folder
@@ -92,6 +101,11 @@ public class ArticleTests extends CoreTestCase {
     }
 
     @Test
+    @Features(value = {@Feature(value="Search"),@Feature(value="Article")})
+    @DisplayName("Finding articles with title")
+    @Description("Test is searching articles for search word, finding in search result article with the defined header")
+    @Step("Starting test testFindTitle")
+    @Severity(value=SeverityLevel.BLOCKER)
     public void testFindTitle()
     {
         SearchPageObject SearchPageObject = SearchPageObjectFactory.get(driver);

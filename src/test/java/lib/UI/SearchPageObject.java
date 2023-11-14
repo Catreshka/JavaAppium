@@ -1,5 +1,6 @@
 package lib.UI;
 
+import io.qameta.allure.Step;
 import lib.Platform;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -44,33 +45,40 @@ abstract public class SearchPageObject extends MainPageObject{
     }
     /*TEMPLATES METHODS */
 
+    @Step("Initializing the search field")
     public void initSearchInput()
     {
             this.waitForElementPresent(SEARCH_INIT_AND_INPUT_ELEMENT, "Cannot find Search Wikipedia input");
             this.waitForElementAndClick(SEARCH_INIT_AND_INPUT_ELEMENT, "Cannot find search input after clicking search input element",5);
     }
 
+    @Step("Waiting for button to cancel search result")
     public void waitForCancelButtonToAppear()
     {
         this.waitForElementPresent(SEARCH_CANCEL_BUTTON,"Cannot find Navigate up to cancel",5);
     }
+    @Step("Waiting for search cancel button to do disappear")
     public void waitForCancelButtonToDisappear()
     {
         this.waitForElementNotPresent(SEARCH_CANCEL_BUTTON,"Cannot find search cancel button",5);
     }
+    @Step("Clicking button to cancel search result")
     public void clickCancelSearch()
     {
         this.waitForElementAndClick(SEARCH_CANCEL_BUTTON,"Cannot find and click search cancel button",5);
     }
+    @Step("Clear search phrase in search input")
     public void clearSearchPhrase()
     {
         this.waitForElementAndClear(SEARCH_CLEAR_PHRASE,"Cannot find search field",5);
     }
+    @Step("Checking that nothing search result on screen")
     public void searchNothingResult()
     {
         this.waitForElementPresent(SEARCH_BEFORE_INPUT_ELEMENT,"There is a search result on the screen");
     }
 
+    @Step("Typing '{search_line}' to the search line")
     public void typeSearchLine(String search_line)
     {
         if (Platform.getInstance().isiOS())
@@ -81,8 +89,10 @@ abstract public class SearchPageObject extends MainPageObject{
         } else {
             this.waitForElementAndSendKeys(SEARCH_INPUT_ELEMENT,search_line,"Cannot find search Java input",5);
         }
+        screenshot(this.takeScreenshot("search_line"));
     }
 
+    @Step("Waiting for search result by '{substring}'")
     public void waitForSearchResult(String substring)
     {
         if (Platform.getInstance().isMW()) {
@@ -94,24 +104,28 @@ abstract public class SearchPageObject extends MainPageObject{
         }
     }
 
+    @Step("Making sure there are no results for the search by '{substring}'")
     public void waitForSearchNoResult(String substring)
     {
         String search_no_result_xpath = getResultSearchElement(substring);
         this.waitForElementNotPresent(search_no_result_xpath,"Result is still on screen" + substring,15);
     }
 
+    @Step("Waiting for search result and select an article by '{substring}' in article title")
     public void clickByArticleWithSubstring(String substring)
     {
         String search_result_xpath = getResultSearchTitleElement(substring);
         this.waitForElementAndClick(search_result_xpath,"Cannot find and click search result with substring " + substring,15);
     }
 
+    @Step("Select an article by '{substring}' in article title in favourite list")
     public void clickBySavedArticleWithSubstring(String substring)
     {
         if (Platform.getInstance().isMW()) {
             this.waitForElementAndClick(TITLE_ARTICLE,"Cannot find and click saved result with substring " + substring,15);
         }
     }
+    @Step("Getting amount of found articles")
     public int getAmountOfFoundArticles()
     {
         this.waitForElementPresent(
@@ -121,10 +135,12 @@ abstract public class SearchPageObject extends MainPageObject{
         );
         return this.getAmountOfElements(SEARCH_AMOUNT_RESULT);
     }
+    @Step("Making sure there are all results contains search word '{search_line}'")
     public void findWordInSearchResult(String search_line)
     {
         this.waitForWordInElement(SEARCH_RESULT_LIST, SEARCH_ITEM, "Cannot find " + search_line + " in each search result", search_line);
     }
+    @Step("Making sure there are search input contains default text - '{expected_text}'")
     public void searchExpectedText(String expected_text)
     {
         if (Platform.getInstance().isiOS())
@@ -136,6 +152,7 @@ abstract public class SearchPageObject extends MainPageObject{
         this.assertElementHasText(SEARCH_INPUT_ELEMENT, expected_text, "Element does not exist", "Element does not equal " + expected_text);
         }
     }
+    @Step("Searching for results based on two conditions - '{title}' and '{description}'")
     public void waitForElementByTitleAndDescription(String title, String description)
     {
         String search_result_for_two_condition = getResultSearchTitleAndDescription(title, description);
